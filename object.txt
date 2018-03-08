@@ -4,36 +4,48 @@ GID: uint32 // group id
 SID: uint32 // student id
 
 OBJ-USER-IDENTIFY:
-	uid 		UID
-	session 	string
+{
+	"uid": UID,
+	"session": "user session"
+}
 
 OBJ-GROUP-IDENTIFY:
-	gid 		GID
-	opengid 	string
+{
+	"gid": GID,
+	"opengid": "opengid"
+}
 
-OBJ-SECRET:
-	encryptedData 	string
-	iv				string
+OBJ-SECRET: // from wx.getShareInfo
+{
+	"encryptedData": "encryptedData",
+	"iv": "iv"
+}
 
 OBJ-LEASE:
-	begin		TIME-STAMP
-	end			TIME-STAMP
+{
+	"begin": TIME-STAMP,
+	"end": TIME-STAMP
+}
 
 OBJ-GROUP-INFO:
-	gid			GID
-	opengid		string
-	adviser 	UID 			// 班主任
-	payer 		UID 			// 支付者
-	lease 		OBJ-LEASE		// 租约
-	create 		TIME-STAMP 		// 群组创建时间
-	students 	MAP-STUDENT
-	teachers 	MAP-TEACHER
-	patriarchs	MAP-PATRIARCHS	// 家长
+{
+	"gid":		GID,
+	"opengid":	"opengid",
+	"adviser": 	UID, 			// 班主任
+	"payer":	UID, 			// 支付者
+	"lease":	OBJ-LEASE,		// 租约
+	"create":	TIME-STAMP, 	// 群组创建时间
+	"students": MAP-STUDENT,
+	"teachers": MAP-TEACHER,
+	"patriarchs": MAP-PATRIARCHS	// 家长
+}
 
 OBJ-CHECKIN-STUDENT:
-	name		string		// 学生姓名
-	relation 	string		// 关系: 家长是学生的XXX
-	sex 		ENUM-SEX	// 学生性别
+{
+	"name":		"学生姓名",
+	"relation": "关系",		// 家长是学生的XXX
+	"sex": 		ENUM-SEX	// 学生性别
+}
 
 MAP-STUDENT:
 	k: SID(string)		// student sid string
@@ -48,47 +60,60 @@ MAP-PATRIARCH:
 	v: OBJ-PATRIARCH
 
 OBJ-STUDENT：
-	name		string		// 学生姓名
-	sex 		ENUM-SEX	// 学生性别
-	relation 	MAP-STUDEN-RELATION
+{
+	"name":		"学生姓名",
+	"sex": 		ENUM-SEX,	// 学生性别
+	"relation":	MAP-STUDEN-RELATION
+}
 
 MAP-STUDEN-RELATION:
 	k: UID(string)		// 家长 uid string
-	v: "RELATION"		// 关系: 家长是学生的XXX
+	v: string			// 关系: 家长是学生的XXX
 
 OBJ-TEACHER:
-	name		string	// 名字，登记时输入
-	nick 		string  // 微信昵称
+{
+	"name": 	"名字",	// 登记时输入
+	"nick":		"微信昵称"
+}
 
 OBJ-PATRIARCH:
-	name 		string	// 名字，登记时输入
-	nick		string	// 微信昵称
-	relation	MAP-PATRIARCH-RELATION
+{
+	"name": 	"名字",	// 登记时输入
+	"nick":		"微信昵称",
+	"relation":	MAP-PATRIARCH-RELATION
+}
 
 MAP-PATRIARCH-RELATION:
 	k: SID(string)		// student sid string
 	v: string			// 关系: 家长是学生的XXX
 
 OBJ-TOPIC:
-	uid 		UID 	// topic creater's UID
-	create 		TIME-STAMP
-	type 		uint32 	// topic type
-	key 		string	// topic key, 建议格式 "${uid}/${time}/${seq}"
-	value 		object  // topic value，
+{
+	"uid": 		UID, 	// topic creater's UID
+	"create":	TIME-STAMP,
+	"type":		"topic type",
+	"key": 		"topic key", 	// 唯一, 建议格式 "${uid}/${time}/${seq}"
+	"value":	"topic value"  	// object(js)==>json==>base64
+}
 
 OBJ-TOPIC-LOG:
-	uid 		UID 	// topic log creater's UID
-	create 		TIME-STAMP
-	topic		string 	// topic key
-	key 		string
-	value 		object
+{
+	"uid": 		UID, 	// topic log creater's UID
+	"create":	TIME-STAMP,
+	"topic":	"topic key",
+	"key": 		"topic log key", 	// 唯一, 建议格式 "${uid}/${time}/${seq}"
+	"value":	"topic log value"  	// object(js)==>json==>base64
+}
 
+// https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=3
 OBJ-PAY:
-	timeStamp	string
-	nonceStr 	string
-	package		string
-	signType 	string
-	paySign		string
+{
+	"timeStamp": 	"timeStamp",
+	"nonceStr": 	"nonceStr",
+	"package":		"package",
+	"signType": 	"signType",
+	"paySign":		"paySign",
+}
 
 ENUM-SEX: int
 	0: unknow
