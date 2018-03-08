@@ -1,4 +1,5 @@
 start:
+	// wx.getShareInfo()
 	if get sharetick then
 		// goto: start from group
 	else
