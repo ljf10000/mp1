@@ -1,0 +1,237 @@
+URL: https://NN.DOMAIN/SERVICE
+其中
+	NN表示服务器ID号，最大20个，取值从00,01,02, ..., 17,18,www
+		www对应服务器ID号19
+	DOMAIN: note.mp.example.com
+	SERVICE: 具体服务
+比如 https://02.note.mp.example.com/rand/login
+	NN为02
+	DOMAIN为 note.mp.example.com
+	SERVICE为 rand/login
+
+// --------------------------------------------------------
+// 时机：一般启动
+// 条件：本地存储有 uid，session 超时
+https://NN.DOMAIN/user/login
+input:
+{
+	"jscode": "JSCODE",
+	"uid": UID
+}
+output:
+{
+	"error": OBJ-ERROR,
+	"userIdentify": OBJ-USER-IDENTIFY
+}
+
+// --------------------------------------------------------
+// 时机：群组内启动，拿到 sharetick
+// 条件：本地存储有 uid，session 超时
+https://NN.DOMAIN/user/login-gsecret
+input:
+{
+	"uid": UID,
+	"jscode": "JSCODE",
+	"gsecret": OBJ-SECRET
+}
+output:
+{
+	"error": "ERROR",
+	"userIdentify": OBJ-USER-IDENTIFY,
+	"opengid": "OPENGID"
+}
+
+// --------------------------------------------------------
+// 时机：群组内启动拿到 sharetick，或者转发到群组拿到 sharetick
+// 条件：本地存储有 uid，session 未超时
+https://NN.DOMAIN/user/gsecret
+input:
+{
+	"uid": UID,
+	"session": "SESSION",
+	"gsecret": OBJ-SECRET,
+}
+output:
+{
+	"error": "ERROR",
+	"opengid": "OPENGID"
+}
+
+// --------------------------------------------------------
+// 时机：一般启动
+// 条件：本地存储无 uid
+https://NN.DOMAIN/rand/login
+input:
+{
+	"jscode": "JSCODE"
+}
+output:
+{
+	"error": "ERROR",
+	"userIdentify": OBJ-USER-IDENTIFY
+}
+
+// --------------------------------------------------------
+// 时机：群组内启动，拿到 sharetick
+// 条件：本地存储无 uid，
+https://NN.DOMAIN/rand/login-gsecret
+input:
+{
+	"jscode": "JSCODE",
+	"gsecret": OBJ-SECRET,
+}
+
+output:
+{
+	"error": "ERROR",
+	"userIdentify": OBJ-USER-IDENTIFY,
+	"opengid": "OPENGID"
+}
+
+// --------------------------------------------------------
+// 时机：-
+// 条件：已登陆，已登记
+https://NN.DOMAIN/group/info
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION"
+}
+output:
+{
+	"error": "ERROR",
+	"groupInfo": OBJ-GROUP-INFO
+}
+
+// --------------------------------------------------------
+// 时机：用户支付
+// 条件：已登陆，已登记
+https://NN.DOMAIN/group/pay
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION",
+
+	"money": MONEY-PAY,
+	"time": TIME-PAY,
+	"lease": OBJ-LEASE,
+}
+output:
+{
+	"error": "ERROR",
+	"pay": OBJ-PAY,
+}
+
+// --------------------------------------------------------
+// 时机：用户创建主题
+// 条件：已登陆，已登记
+https://NN.DOMAIN/group/topic/new
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION",
+
+	"type": TOPIC-TYPE,
+	"key": "TOPIC-KEY",
+	"value": "TOPIC-VALUE"
+}
+output:
+{
+	"error": "ERROR",
+}
+
+// --------------------------------------------------------
+// 时机：用户获取主题
+// 条件：已登陆，已登记
+https://NN.DOMAIN/group/topic/get
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION",
+
+	"key": "TOPIC-KEY",
+}
+output:
+{
+	"error": "ERROR",
+	"topic": OBJ-TOPIC,
+	"logs" : [OBJ-TOPIC-LOG]
+}
+
+// --------------------------------------------------------
+// 时机：用户删除主题
+// 条件：已登陆，已登记
+https://NN.DOMAIN/group/topic/del
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION",
+
+	"key": "TOPIC-KEY",
+}
+output:
+{
+	"error": "ERROR",
+}
+
+// --------------------------------------------------------
+// 时机：用户添加主题日志
+// 条件：已登陆，已登记
+https://NN.DOMAIN/group/topic/log
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION",
+
+	"topic": "TOPIC-KEY",
+	"key": "TOPIC-LOG-KEY",
+	"value": "TOPIC-LOG-VALUE"
+}
+output:
+{
+	"error": "ERROR",
+	"topic": OBJ-TOPIC,
+}
+
+// --------------------------------------------------------
+// 时机：拿到opengid，提交登记信息
+// 条件：已登陆，opengid本地未记录
+https://NN.DOMAIN/group/checkin
+input:
+{
+	"uid": UID,
+	"session": "SESSION",
+	"opengid": "OPENGID",
+	"role": ROLE,
+	"name": "NAME",
+	"students": [OBJ-CHECKIN-STUDENT]
+}
+output:
+{
+	"error": "ERROR",
+	"gid": GID,
+}
+
+// --------------------------------------------------------
+// 时机：拿到opengid，修改登记信息
+// 条件：已登陆，opengid本地已记录
+https://NN.DOMAIN/group/checkin
+input:
+{
+	"uid": UID,
+	"session": "SESSION",
+	"gid": GID,
+	"role": ROLE,
+	"name": "NAME",
+	"students": [OBJ-CHECKIN-STUDENT]
+}
+output:
+{
+	"error": "ERROR",
+}

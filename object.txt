@@ -3,10 +3,6 @@ UID: uint32 // user id
 GID: uint32 // group id
 SID: uint32 // student id
 
-// empty: OK
-// other: error
-ERROR: string
-
 OBJ-USER-IDENTIFY:
 	uid 		UID
 	session 	string
