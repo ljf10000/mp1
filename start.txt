@@ -1,0 +1,28 @@
+start:
+	if get sharetick then
+		// goto: start from group
+	else
+		// goto: start normal
+	end if
+
+start from group:
+	if get uid then
+		if session NOT timeout then
+			request url: user/gsecret
+		else // session timeout
+			request url: user/login-gsecret
+		end if
+	else // no uid
+		request url: rand/login-gsecret
+	end if
+
+start normal:
+	if get uid then
+		if session NOT timeout then
+			do nothing
+		else // session timeout
+			request url: user/login
+		end if
+	else // no uid
+		request url: rand/login
+	end if

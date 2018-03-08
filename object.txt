@@ -1,0 +1,104 @@
+TIME-STAMP: uint32 // 东八区，unix 秒数
+UID: uint32 // user id
+GID: uint32 // group id
+SID: uint32 // student id
+
+// empty: OK
+// other: error
+ERROR: string
+
+OBJ-USER-IDENTIFY:
+	uid 		UID
+	session 	string
+
+OBJ-GROUP-IDENTIFY:
+	gid 		GID
+	opengid 	string
+
+OBJ-SECRET:
+	encryptedData 	string
+	iv				string
+
+OBJ-LEASE:
+	begin		TIME-STAMP
+	end			TIME-STAMP
+
+OBJ-GROUP-INFO:
+	gid			GID
+	opengid		string
+	adviser 	UID 			// 班主任
+	payer 		UID 			// 支付者
+	lease 		OBJ-LEASE		// 租约
+	create 		TIME-STAMP 		// 群组创建时间
+	students 	MAP-STUDENT
+	teachers 	MAP-TEACHER
+	patriarchs	MAP-PATRIARCHS	// 家长
+
+OBJ-CHECKIN-STUDENT:
+	name		string		// 学生姓名
+	relation 	string		// 关系: 家长是学生的XXX
+	sex 		ENUM-SEX	// 学生性别
+
+MAP-STUDENT:
+	k: SID(string)		// student sid string
+	v: OBJ-STUDENT
+
+MAP-TEACHER:
+	k: UID(string)		// teacher uid string
+	v: OBJ-TEACHER
+
+MAP-PATRIARCH:
+	k: UID(string)		// 家长 uid string
+	v: OBJ-PATRIARCH
+
+OBJ-STUDENT：
+	name		string		// 学生姓名
+	sex 		ENUM-SEX	// 学生性别
+	relation 	MAP-STUDEN-RELATION
+
+MAP-STUDEN-RELATION:
+	k: UID(string)		// 家长 uid string
+	v: "RELATION"		// 关系: 家长是学生的XXX
+
+OBJ-TEACHER:
+	name		string	// 名字，登记时输入
+	nick 		string  // 微信昵称
+
+OBJ-PATRIARCH:
+	name 		string	// 名字，登记时输入
+	nick		string	// 微信昵称
+	relation	MAP-PATRIARCH-RELATION
+
+MAP-PATRIARCH-RELATION:
+	k: SID(string)		// student sid string
+	v: string			// 关系: 家长是学生的XXX
+
+OBJ-TOPIC:
+	uid 		UID 	// topic creater's UID
+	create 		TIME-STAMP
+	type 		uint32 	// topic type
+	key 		string	// topic key, 建议格式 "${uid}/${time}/${seq}"
+	value 		object  // topic value，
+
+OBJ-TOPIC-LOG:
+	uid 		UID 	// topic log creater's UID
+	create 		TIME-STAMP
+	topic		string 	// topic key
+	key 		string
+	value 		object
+
+OBJ-PAY:
+	timeStamp	string
+	nonceStr 	string
+	package		string
+	signType 	string
+	paySign		string
+
+ENUM-SEX: int
+	0: unknow
+	1: man
+	2: woman
+
+
+pay:
+	request url: group/pay
