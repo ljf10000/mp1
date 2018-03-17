@@ -3,16 +3,10 @@ UID: uint32 // user id
 GID: uint32 // group id
 SID: uint32 // student id
 
-OBJ-USER-IDENTIFY:
+OBJ-USER:
 {
 	"uid": UID,
 	"session": "user session"
-}
-
-OBJ-GROUP-IDENTIFY:
-{
-	"gid": GID,
-	"opengid": "opengid"
 }
 
 OBJ-SECRET: // from wx.getShareInfo
@@ -27,9 +21,8 @@ OBJ-LEASE:
 	"end": TIME-STAMP
 }
 
-OBJ-GROUP-INFO:
+OBJ-GROUP:
 {
-	"gid":		GID,
 	"opengid":	"opengid",
 	"adviser": 	UID, 			// 班主任
 	"payer":	UID, 			// 支付者
@@ -59,6 +52,14 @@ MAP-PATRIARCH:
 	k: UID(string)		// 家长 uid string
 	v: OBJ-PATRIARCH
 
+MAP-GROUP-VERSION:
+	k: GID(string)
+	v: group version(number)
+
+MAP-GROUP:
+	k: GID(string)
+	v: OBJ-GROUP
+
 OBJ-STUDENT：
 {
 	"name":		"学生姓名",
@@ -87,12 +88,6 @@ MAP-PATRIARCH-RELATION:
 	k: SID(string)		// student sid string
 	v: string			// 关系: 家长是学生的XXX
 
-OBJ-VOTE:
-{
-	"topic": OBJ-TOPIC,
-	"subjects": [ OBJ-VOTE-SUBJECT ]
-}
-
 OBJ-TOPIC:
 {
 	// creater's UID
@@ -110,6 +105,41 @@ OBJ-VOTE-SUBJECT:
 	"title":	"subject title",
 	"options": 	[ "option" ]
 }
+
+OBJ-VOTE:
+{
+	"topic": OBJ-TOPIC,
+	"subjects": [ OBJ-VOTE-SUBJECT ]
+}
+
+OBJ-VOTE-RESULT:
+{
+	"selections": MAP-VOTE-SELECTION,
+	"students": MAP-VOTE-STUDENT,
+	"patriarchs": MAP-VOTE-PATRIARCH,
+}
+
+MAP-VOTE-SELECTION:
+	k: vote selection id(string)
+	v: OBJ-VOTE-SELECTION
+
+MAP-VOTE-STUDENT:
+	k: student sid(string)
+	v: vote selection id(number)
+	
+MAP-VOTE-PATRIARCH:
+	k: patriarch uid(string)
+	v: vote selection id(number)
+
+OBJ-VOTE-SELECTION:
+{
+	"time": TIME-STAMP,
+	"subjects": [ VOTE-SUBJECT-OPTION-SELECT ],
+}
+
+VOTE-SUBJECT-OPTION-SELECT(string):
+	single option: "A" or "B" or "C" ...
+	multi option: "ABC" or "ACD" ...
 
 // https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=3
 OBJ-PAY:
