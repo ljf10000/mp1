@@ -205,8 +205,161 @@ output:
 }
 
 // --------------------------------------------------------
-// 时机：微信支付结果通知
-// 条件：已完成预支付
-https://NN.DOMAIN/group/pay/notify
+// 时机：一般启动
+// 条件：已登陆，未超时
+https://NN.DOMAIN/group/topic/del
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION",
+	"topicid": VOTE-ID
+}
+output:
+{
+	"error": "ERROR"
+}
+// --------------------------------------------------------
+// 时机：一般启动
+// 条件：已登陆，未超时
+https://NN.DOMAIN/group/topic/close
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION",
+	"topicid": VOTE-ID
+}
+output:
+{
+	"error": "ERROR"
+}
+
+// --------------------------------------------------------
+// 时机：一般启动
+// 条件：已登陆，未超时
+https://NN.DOMAIN/group/topic/summary
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION",
+	"filter": OBJ-VOTE-FILTER
+}
+output:
+{
+	"error": "ERROR",
+	"summary": OBJ-VOTE-SUMMARY,
+}
+
+// --------------------------------------------------------
+// 时机：一般启动
+// 条件：已登陆，未超时
+https://NN.DOMAIN/group/vote/new
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION",
+	"topic": OBJ-TOPIC,
+	"vote": OBJ-VOTE
+}
+output:
+{
+	"error": "ERROR",
+	"votex": OBJ-VOTEX
+}
+
+// --------------------------------------------------------
+// 时机：一般启动
+// 条件：已登陆，未超时
+https://NN.DOMAIN/group/vote/get
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION",
+	"topicid": TOPIC-ID
+}
+output:
+{
+	"error": "ERROR",
+	"votex": OBJ-VOTEX
+}
+
+// --------------------------------------------------------
+// 时机：一般启动
+// 条件：已登陆，未超时
+https://NN.DOMAIN/group/vote/select
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION",
+	"topicid": VOTE-ID,
+	"selection": OBJ-VOTE-SELECTION
+}
+output:
+{
+	"error": "ERROR",
+	"votex": OBJ-VOTEX
+}
+
+// --------------------------------------------------------
+// 时机：一般启动
+// 条件：已登陆，未超时
+https://NN.DOMAIN/group/notice/new
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION",
+	"topic": OBJ-TOPIC
+}
+output:
+{
+	"error": "ERROR",
+	"noticex": OBJ-NOTICEX
+}
+
+// --------------------------------------------------------
+// 时机：一般启动
+// 条件：已登陆，未超时
+https://NN.DOMAIN/group/notice/get
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION",
+	"topicid": TOPIC-ID
+}
+output:
+{
+	"error": "ERROR",
+	"noticex": OBJ-NOTICEX
+}
+
+// --------------------------------------------------------
+// 时机：一般启动
+// 条件：已登陆，未超时
+https://NN.DOMAIN/group/notice/confirm
+input:
+{
+	"uid": UID,
+	"gid": GID,
+	"session": "SESSION",
+	"topicid": VOTE-ID,
+}
+output:
+{
+	"error": "ERROR",
+	"noticex": OBJ-NOTICEX
+}
+
+// --------------------------------------------------------
 
 
+// --------------------------------------------------------
+
+
+// --------------------------------------------------------
