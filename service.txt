@@ -2,7 +2,10 @@ URL: https://NN.DOMAIN/SERVICE
 其中
 	NN表示服务器ID号，最大20个，取值从00,01,02, ..., 17,18,www
 		www对应服务器ID号19
-		小程序硬编码一个 NN-COUNT 值，访问服务时，使用哈希值对NN-COUNT取余，得到NN
+		小程序本地缓存一个 NN-COUNT 值（初始化为硬编码 NN-COUNT 值）
+		访问服务时，使用哈希值对NN-COUNT取余，得到NN
+			用户调用 login 接口后，会返回新的 NN-COUNT
+			需要保存此 NN-COUNT，后续使用此 NN-COUNT 计算 NN
 		不同场景选用不同的哈希值，基本原则是访问 URL 时
 			如果参数里有 gid，则用 gid 作为哈希值
 			如果参数里有 uid，则用 uid 作为哈希值
