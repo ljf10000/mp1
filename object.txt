@@ -7,6 +7,7 @@ OBJ-USER:
 {
 	"uid": UID,
 	"session": "user session",
+	"nn": NN-COUNT,
 	"groups": [ OBJ-USER-GROUP ]
 }
 
