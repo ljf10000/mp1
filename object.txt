@@ -30,6 +30,7 @@ OBJ-LEASE:
 
 OBJ-GROUP:
 {
+	"ver": 		GROUP-VERSION(number),
 	"opengid":	"opengid",
 	"adviser": 	UID, 			// 班主任
 	"payer":	UID, 			// 支付者
