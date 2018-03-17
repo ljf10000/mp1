@@ -87,22 +87,28 @@ MAP-PATRIARCH-RELATION:
 	k: SID(string)		// student sid string
 	v: string			// 关系: 家长是学生的XXX
 
-OBJ-TOPIC:
+OBJ-VOTE:
 {
-	"uid": 		UID, 	// topic creater's UID
-	"create":	TIME-STAMP,
-	"type":		"topic type",
-	"key": 		"topic key", 	// 唯一, 建议格式 "${uid}/${time}/${seq}"
-	"value":	"topic value"  	// object(js)==>json==>base64
+	"topic": OBJ-TOPIC,
+	"subjects": [ OBJ-VOTE-SUBJECT ]
 }
 
-OBJ-TOPIC-LOG:
+OBJ-TOPIC:
 {
-	"uid": 		UID, 	// topic log creater's UID
+	// creater's UID
+	"creater": 	UID,
 	"create":	TIME-STAMP,
-	"topic":	"topic key",
-	"key": 		"topic log key", 	// 唯一, 建议格式 "${uid}/${time}/${seq}"
-	"value":	"topic log value"  	// object(js)==>json==>base64
+	"begin":	TIME-STAMP,
+	"end": 		TIME-STAMP,
+	"title":	"vote title",
+	"content":	"vote content",
+}
+
+OBJ-VOTE-SUBJECT:
+{
+	"multi":	is-single-or-multi-option, // bool
+	"title":	"subject title",
+	"options": 	[ "option" ]
 }
 
 // https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=3
@@ -120,6 +126,7 @@ ENUM-SEX: int
 	1: man
 	2: woman
 
-
-pay:
-	request url: group/pay
+ENUM-ROLE: int
+	1: adviser
+	2: teacher
+	3: patriarch
