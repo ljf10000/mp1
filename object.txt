@@ -6,7 +6,14 @@ SID: uint32 // student id
 OBJ-USER:
 {
 	"uid": UID,
-	"session": "user session"
+	"session": "user session",
+	"groups": [ OBJ-USER-GROUP ]
+}
+
+OBJ-USER-GROUP:
+{
+	"gid": GID,
+	"ver": GROUP-VERSION(number),
 }
 
 OBJ-SECRET: // from wx.getShareInfo
@@ -160,3 +167,8 @@ ENUM-ROLE: int
 	1: adviser
 	2: teacher
 	3: patriarch
+
+ENUM-TOPIC-STATE
+	1: open
+	2: close
+	4: all

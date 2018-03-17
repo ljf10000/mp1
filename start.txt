@@ -1,29 +1,30 @@
-start:
-	// wx.getShareInfo()
-	if get sharetick then
-		// goto: start from group
-	else
-		// goto: start normal
-	end if
+启动:
+	在 App.onLaunch() 里调用 wx.getShareInfo()
+	如果 拿到 sharetick
+		走 群组内启动 流程
+	否则
+		走 一般启动 流程
 
-start from group:
-	if get uid then
-		if session NOT timeout then
-			request url: user/gsecret
-		else // session timeout
-			request url: user/login-gsecret
-		end if
-	else // no uid
-		request url: rand/login-gsecret
-	end if
+群组内启动:
+	如果 本地有存储 uid
+		如果 session 超时
+			访问 https://NN.DOMAIN/user/login-gsecret
+			拿到 此群组的 opengid 和 用户信息
+		否则
+			访问 https://NN.DOMAIN/user/gsecret
+			拿到 此群组的 opengid
+	否则
+		访问 https://NN.DOMAIN/rand/login-gsecret
+		拿到 此群组的 opengid 和 用户信息
 
-start normal:
-	if get uid then
-		if session NOT timeout then
+一般启动:
+	如果 本地有存储 uid
+		如果 session 超时
+			访问 https://NN.DOMAIN/user/login
+			拿到用户信息
+		否则
 			do nothing
-		else // session timeout
-			request url: user/login
-		end if
-	else // no uid
-		request url: rand/login
-	end if
+	否则
+		访问 https://NN.DOMAIN/rand/login
+		拿到用户信息
+

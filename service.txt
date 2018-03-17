@@ -2,16 +2,57 @@ URL: https://NN.DOMAIN/SERVICE
 其中
 	NN表示服务器ID号，最大20个，取值从00,01,02, ..., 17,18,www
 		www对应服务器ID号19
+		小程序硬编码一个 NN-COUNT 值，访问服务时，使用哈希值对NN-COUNT取余，得到NN
+		不同场景选用不同的哈希值，基本原则是访问 URL 时
+			如果参数里有 gid，则用 gid 作为哈希值
+			如果参数里有 uid，则用 uid 作为哈希值
+			否则，对 jscode 进行哈希，得到哈希值
 	DOMAIN: note.mp.example.com
 	SERVICE: 具体服务
 比如 https://02.note.mp.example.com/rand/login
 	NN为02
 	DOMAIN为 note.mp.example.com
 	SERVICE为 rand/login
+输入：json格式
+输出：json格式
+	如果包含"error"字段且"error"字段非空字符串，则说明有错误
+	如果未包含"error"字段或"error"字段为空字符串，则说明成功
 
+
+登陆API说明：
+	登陆API包括如下接口
+		https://NN.DOMAIN/rand/login
+		https://NN.DOMAIN/rand/login/gsecret
+		https://NN.DOMAIN/user/login
+		https://NN.DOMAIN/user/login/gsecret
+		https://NN.DOMAIN/user/gsecret
+	URL 包含 rand 的接口，是本地无存储 uid 时使用，此时输入参数必须包含 jscode
+	URL 包含 user 的接口，是本地有存储 uid 时使用，此时输入参数必须包含 uid
+	URL 包含 login的接口，是session超时时使用，此时输入参数必须包含 jscode
+	URL 包含 gsecret 的接口，是从群组内打开别人分享过来的小程序，此时输入参数必须包含 gsecret 对象
+		gsecret是通过 wx.getShareInfo 拿到的 加密数据及加密向量
+	对于输入有jscode的情况，都会返回 user 对象，
+		首先，保存 user 对象
+		其次，检查 user 已经加入到哪些群组（user的groups属性）
+			如果没有加入任何群组
+				说明是首次使用小程序
+				此时应该展示使用帮助，提示用户将小程序分享到目标群组
+			如果已经加入群组
+				检查本地保存的群组信息
+				如果user对象有新增群组，或者user对象的群组版本号比本地群组大
+					则访问 https://NN.DOMAIN/group/get
+					获取最新群组信息，并更新本地群组缓存
+	对于输入有gsecret的情况，都会返回 opengid 和 gid
+		如果 gid 非零
+			说明之前已经绑定了此群组（已做登记）
+			此时，进入群组列表页
+		如果 gid 为零
+			说明用户没有在这个群组登记过
+			此时，进入登记页面，引导完成登记
 // --------------------------------------------------------
 // 时机：一般启动
-// 条件：本地存储无 uid
+// 条件：本地未存储 uid
+// 说明：用户首次使用小程序或换手机
 https://NN.DOMAIN/rand/login
 input:
 {
@@ -20,29 +61,29 @@ input:
 output:
 {
 	"error": "ERROR",
-	"user": OBJ-USER-IDENTIFY
+	"user": OBJ-USER
 }
 
 // --------------------------------------------------------
 // 时机：群组内启动，拿到 sharetick
-// 条件：本地存储无 uid，
-https://NN.DOMAIN/rand/login-gsecret
+// 条件：本地未存储 uid
+https://NN.DOMAIN/rand/login/gsecret
 input:
 {
 	"jscode": "JSCODE",
 	"gsecret": OBJ-SECRET,
 }
-
 output:
 {
 	"error": "ERROR",
-	"user": OBJ-USER-IDENTIFY,
-	"opengid": "OPENGID"
+	"user": OBJ-USER, 
+	"opengid": "OPENGID",
+	"gid": GID
 }
 
 // --------------------------------------------------------
 // 时机：一般启动
-// 条件：本地存储有 uid，session 超时
+// 条件：本地已存储 uid，session 超时
 https://NN.DOMAIN/user/login
 input:
 {
@@ -51,8 +92,8 @@ input:
 }
 output:
 {
-	"error": OBJ-ERROR,
-	"user": OBJ-USER-IDENTIFY
+	"error": "ERROR",
+	"user": OBJ-USER
 }
 
 // --------------------------------------------------------
@@ -68,8 +109,9 @@ input:
 output:
 {
 	"error": "ERROR",
-	"user": OBJ-USER-IDENTIFY,
-	"opengid": "OPENGID"
+	"user": OBJ-USER,
+	"opengid": "OPENGID",
+	"gid": GID
 }
 
 // --------------------------------------------------------
@@ -85,7 +127,8 @@ input:
 output:
 {
 	"error": "ERROR",
-	"opengid": "OPENGID"
+	"opengid": "OPENGID",
+	"gid": GID
 }
 
 // --------------------------------------------------------
